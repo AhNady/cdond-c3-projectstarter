@@ -123,7 +123,7 @@ jobs:
           name: Scan backend dependencies
           command: |
             cd backend
-            npm install npm@latest -g --no-audit
+            npm install --no-audit
             npm audit fix --audit-level=critical --force
             npm update mixin-deep --depth 7
             npm update mkdirp --depth 2
