@@ -127,7 +127,7 @@ jobs:
             npm audit fix --force
             npm update mixin-deep --depth 7
             npm update mkdirp --depth 2
-            npm audit
+            npm audit --production
 #   deploy-infrastructure:
 #     docker:
 #       # Docker image here that supports AWS CLI
