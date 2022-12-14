@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  slack: circleci/slack@4.1
+  slack: circleci/slack@4.12.0
 
 commands:
   destroy-environment:
@@ -133,6 +133,28 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
+
+  notify:
+    docker:
+      - image: 'cimg/base:stable'
+    steps:
+      - slack/notify:
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "*This is a text notification*",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
+          event: always
 
 #   deploy-infrastructure:
 #     docker:
@@ -303,6 +325,8 @@ jobs:
 workflows:
   default:
     jobs:
+      - notify:
+          context: slack-secrets      
       - build-frontend
       - build-backend
       - test-frontend:
@@ -313,7 +337,7 @@ workflows:
           requires: [build-backend]
           context: slack-secrets
       - scan-frontend:
-          requires: [build-frontend]
+          requires: [build-frontend]          
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
