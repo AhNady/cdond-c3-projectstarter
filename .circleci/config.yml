@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  slack: circleci/slack@4.1
 
 commands:
   destroy-environment:
@@ -128,6 +130,10 @@ jobs:
             npm update mixin-deep --depth 7
             npm update mkdirp --depth 2
             npm audit --audit-level=critical
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+
 #   deploy-infrastructure:
 #     docker:
 #       # Docker image here that supports AWS CLI
@@ -305,6 +311,7 @@ workflows:
           requires: [build-backend]
       - scan-backend:
           requires: [build-backend]
+          context: slack-secrets
       - scan-frontend:
           requires: [build-frontend]
       # - deploy-infrastructure:
