@@ -131,23 +131,24 @@ jobs:
             npm update mkdirp --depth 2
             npm audit --audit-level=critical
       - slack/notify:
+          channel: devops
           event: fail
           template: basic_fail_1
 
-  notify:
-    docker:
-      - image: 'cimg/base:stable'
-    steps:
-      - run:
-          command: |
-            echo "check the context variables"
-            echo $SLACK_ACCESS_TOKEN
-            echo $SLACK_DEFAULT_CHANNEL
-            exit 1
-      - slack/notify:
-          channel: devops
-          template: basic_fail_1
-          event: fail
+  # notify:
+  #   docker:
+  #     - image: 'cimg/base:stable'
+  #   steps:
+  #     - run:
+  #         command: |
+  #           echo "check the context variables"
+  #           echo $SLACK_ACCESS_TOKEN
+  #           echo $SLACK_DEFAULT_CHANNEL
+  #           exit 1
+  #     - slack/notify:
+  #         channel: devops
+  #         template: basic_fail_1
+  #         event: fail
 
 #   deploy-infrastructure:
 #     docker:
@@ -318,22 +319,21 @@ jobs:
 workflows:
   default:
     jobs:
-      - notify:
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
           context: slack-secrets
+      - scan-frontend:
+          requires: [build-frontend]          
 
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
+      # - notify:
       #     context: slack-secrets
-      # - scan-frontend:
-      #     requires: [build-frontend]          
-
-
+      
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
