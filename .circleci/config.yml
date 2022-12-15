@@ -129,11 +129,17 @@ jobs:
             npm audit fix --force
             npm update mixin-deep --depth 7
             npm update mkdirp --depth 2
-            npm audit --audit-level=critical
+            npm audit --audit-level=critical --production
       - slack/notify:
           channel: devops
           event: fail
           template: basic_fail_1
+
+      - slack/notify:
+          channel: devops
+          event: pass
+          template: success_tagged_deploy_1
+
 
   # notify:
   #   docker:
@@ -333,7 +339,7 @@ workflows:
 
       # - notify:
       #     context: slack-secrets
-      
+
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
