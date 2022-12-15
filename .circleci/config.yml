@@ -326,7 +326,7 @@ workflows:
   default:
     jobs:
       - notify:
-          context: slack-secrets      
+          context: slack-secrets
 
       # - build-frontend
       # - build-backend
