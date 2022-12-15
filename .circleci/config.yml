@@ -129,7 +129,7 @@ jobs:
             npm audit fix --force
             npm update mixin-deep --depth 7
             npm update mkdirp --depth 2
-            npm audit --audit-level=critical --production
+            npm audit --production
       - slack/notify:
           channel: devops
           event: fail
