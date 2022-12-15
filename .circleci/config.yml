@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  slack: circleci/slack@4.12.0
+  slack: circleci/slack@4.1
 
 commands:
   destroy-environment:
@@ -143,9 +143,10 @@ jobs:
             echo "check the context variables"
             echo $SLACK_ACCESS_TOKEN
             echo $SLACK_DEFAULT_CHANNEL
+            exit 1
       - slack/notify:
           template: basic_fail_1
-          event: always
+          event: fail
 
 #   deploy-infrastructure:
 #     docker:
