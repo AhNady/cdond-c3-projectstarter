@@ -138,6 +138,11 @@ jobs:
     docker:
       - image: 'cimg/base:stable'
     steps:
+      - run:
+          command: |
+            echo "check the context variables"
+            echo $SLACK_ACCESS_TOKEN
+            echo $SLACK_DEFAULT_CHANNEL
       - slack/notify:
           custom: |
             {
