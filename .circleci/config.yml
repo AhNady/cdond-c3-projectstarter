@@ -178,24 +178,28 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       
-#   configure-infrastructure:
-#     docker:
-#       # Docker image here that supports Ansible
-#     steps:
-#       # Checkout code from git
-#       # Add ssh keys with fingerprint
-#       # attach workspace
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # Your code here
-#             exit 1
-#       - run:
-#           name: Configure server
-#           command: |
-#             # Your code here
-#             exit 1
-#       # Here's where you will add some code to rollback on failure      
+  configure-infrastructure:
+    docker:
+      - image: cimg/python:3.11.0
+    steps:
+      - checkout
+      - add_ssh_keys:            
+          fingerprints: ["ee:c0:31:d5:63:0f:3f:b8:38:62:c3:fe:cb:e6:70:69"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt --purge autoremove
+            sudo apt update
+            sudo apt install ansible
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook configure-server.yml -i inventory.txt
+
+      # Here's where you will add some code to rollback on failure      
 
 #   run-migrations:
 #     docker:
@@ -329,9 +333,9 @@ workflows:
           filters:
             branches:
               only: master
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
 
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
