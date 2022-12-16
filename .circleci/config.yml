@@ -206,10 +206,9 @@ jobs:
           command: |
             mkdir -p ~/.ssh
             chmod +w  ~/.ssh/known_hosts
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
             cd .circleci/ansible
             ansible-playbook configure-server.yml -i inventory.txt
-
-      # Here's where you will add some code to rollback on failure      
 
 #   run-migrations:
 #     docker:
