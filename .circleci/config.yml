@@ -177,6 +177,7 @@ jobs:
           name: Install tar
           command: |
             yum install -y tar gzip
+            ls -a
       - persist_to_workspace:
           root: ~/
           paths:
