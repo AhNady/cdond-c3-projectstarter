@@ -191,7 +191,7 @@ jobs:
       - add_ssh_keys:            
           fingerprints: ["ee:c0:31:d5:63:0f:3f:b8:38:62:c3:fe:cb:e6:70:69"]
       - attach_workspace:
-          at: ~/
+          at: .circleci/ansible
       - run:
           name: check the direcotory
           command: |
