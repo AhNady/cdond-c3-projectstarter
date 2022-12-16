@@ -8,7 +8,7 @@ Parameters:
 
 Resources:
   InstanceSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
+    Type: AWS::EC2::SecurityGroupss
     Properties:
       GroupName: !Sub UdaPeople-${ID}
       GroupDescription: Allow port 22 and port 3030.
@@ -28,7 +28,7 @@ Resources:
       InstanceType: t3.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: key
+      KeyName: udacity
       ImageId: ami-0574da719dca65348 
       Tags:
         - Key: Name
