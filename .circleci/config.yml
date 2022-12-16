@@ -172,15 +172,15 @@ jobs:
           command: |
             aws ec2 describe-instances --filters "Name=tag-value,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Reservations[*].Instances[*].[PublicIpAddress]" \
-              --output text >> .circleci/ansible/inventory.txt
+              --output text > ec2PublicIP.txt
       - run: 
           name: Install tar
           command: |
             yum install -y tar gzip
       - persist_to_workspace:
-          root: .circleci/ansible 
+          root: ~/ 
           paths:
-            - inventory.txt
+            - ec2PublicIP.txt
       
   configure-infrastructure:
     docker:
@@ -190,11 +190,11 @@ jobs:
       - add_ssh_keys:            
           fingerprints: ["ee:c0:31:d5:63:0f:3f:b8:38:62:c3:fe:cb:e6:70:69"]
       - attach_workspace:
-          at: .circleci/ansible
+          at: ~/
       - run:
           name: check the inventory file
           command: |
-            cat .circleci/ansible/inventory.txt
+            cat ~/ec2PublicIP >> .circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
           command: |
@@ -205,8 +205,8 @@ jobs:
           name: Configure server
           command: |
             mkdir -p ~/.ssh
-            chmod +w  ~/.ssh/known_hosts
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no
+            ssh-keyscan `cat ~/ec2PublicIP` >> ~/.ssh/known_hosts
+            cat ~/.ssh/known_hosts
             cd .circleci/ansible
             ansible-playbook configure-server.yml -i inventory.txt
 
