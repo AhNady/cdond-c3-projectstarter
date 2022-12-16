@@ -177,7 +177,6 @@ jobs:
           name: Install tar
           command: |
             yum install -y tar gzip
-            ls -a
       - persist_to_workspace:
           root: .circleci/ansible 
           paths:
@@ -193,10 +192,8 @@ jobs:
       - attach_workspace:
           at: .circleci/ansible
       - run:
-          name: check the direcotory
+          name: check the inventory file
           command: |
-            pwd
-            ls -a
             cat .circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
@@ -207,6 +204,8 @@ jobs:
       - run:
           name: Configure server
           command: |
+            mkdir -p ~/.ssh
+            chmod +w  ~/.ssh/known_hosts
             cd .circleci/ansible
             ansible-playbook configure-server.yml -i inventory.txt
 
