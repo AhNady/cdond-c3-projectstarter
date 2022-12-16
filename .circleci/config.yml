@@ -172,16 +172,16 @@ jobs:
           command: |
             aws ec2 describe-instances --filters "Name=tag-value,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Reservations[*].Instances[*].[PublicIpAddress]" \
-              --output text > ~/.circleci/ansible/inventory.txt
+              --output text > .circleci/ansible/inventory.txt
       - run: 
           name: Install tar
           command: |
             yum install -y tar gzip
             ls -a
       - persist_to_workspace:
-          root: ~/
+          root: .circleci/ansible 
           paths:
-            - .circleci/ansible/inventory.txt
+            - inventory.txt
       
   configure-infrastructure:
     docker:
