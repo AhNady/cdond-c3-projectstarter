@@ -222,8 +222,14 @@ jobs:
             npm fund
             npm install
             npm run migrations > migrations_dump.txt
+
+      - run:
+          name: Run migrations
+          when: on_fail
+          command: |
             ls -a
             cat `ls -rt |tail -1`
+
       - run:
           name: Send migration results to memstash
           command: |
