@@ -225,7 +225,6 @@ jobs:
             rm -rf node_modules
             npm i --package-lock-only
             npm install
-            npm run clean
             npm run build
             npm run migrations > migrations_dump.txt
 
