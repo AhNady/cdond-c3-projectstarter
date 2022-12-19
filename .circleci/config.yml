@@ -227,7 +227,8 @@ jobs:
           name: Check log file
           when: on_fail
           command: |
-            ls -a
+            cd /home/circleci/.npm/_logs
+            ls -a            
             cat `ls -rt  /home/circleci/.npm/_logs |tail -1`
 
       - run:
