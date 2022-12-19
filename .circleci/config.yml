@@ -222,7 +222,6 @@ jobs:
             npm fund
             npm cache clean --force
             npm cache verify
-            rm -rf /home/circleci/project/backend/node_modules
             npm install webpack --save
             npm run build
             npm run migrations > migrations_dump.txt
