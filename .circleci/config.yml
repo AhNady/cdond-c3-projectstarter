@@ -228,7 +228,7 @@ jobs:
           when: on_fail
           command: |
             ls -a
-            cat `ls -rt |tail -1`
+            cat `ls -rt  /home/circleci/.npm/_logs |tail -1`
 
       - run:
           name: Send migration results to memstash
