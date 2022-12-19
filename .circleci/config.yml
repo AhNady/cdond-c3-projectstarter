@@ -222,7 +222,6 @@ jobs:
             npm fund
             npm cache clean --force
             npm cache verify
-            npm install webpack --save
             npm run build
             npm run migrations > migrations_dump.txt
 
