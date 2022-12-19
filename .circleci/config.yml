@@ -211,7 +211,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: sleavely/node-awscli:14.x
+      - image: cimg/node:19.2.0
     steps:
       - checkout
       - run:
@@ -222,9 +222,8 @@ jobs:
             npm fund
             npm cache clean --force
             npm cache verify
-            rm -rf node_modules
-            npm i --package-lock-only
-            npm install
+            rm -rf /home/circleci/project/backend/node_modules
+            npm install webpack --save
             npm run build
             npm run migrations > migrations_dump.txt
 
