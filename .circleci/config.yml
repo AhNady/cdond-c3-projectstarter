@@ -220,6 +220,8 @@ jobs:
             cd backend
             npm audit fix
             npm fund
+            npm cache clean --force
+            rm -rf node_modules
             npm install
             npm run migrations > migrations_dump.txt
 
