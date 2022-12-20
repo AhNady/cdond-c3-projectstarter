@@ -257,7 +257,7 @@ jobs:
           command: |
             yum update -y
             yum install -y python3
-            curl --silent --location https://rpm.nodesource.com/setup_18.x | bash -
+            curl --silent --location https://rpm.nodesource.com/setup_16.x | bash -
             yum -y install nodejs --skip-broken
             npm install pm2
             yum install -y tar gzip
