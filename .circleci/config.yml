@@ -306,14 +306,12 @@ jobs:
             cd backend
             npm install
             npm run build
-            cd ..  
-            tar -C backend -czvf artifact.tar.gz .
-            cd .circleci/ansible
-            echo "Contents  of the inventory.txt file is -------"
-            cat inventory.txt
-            mkdir -p ~/.ssh
-            ssh-keyscan `sed -n '2p' inventory.txt` >> ~/.ssh/known_hosts
+            tar -czf artifact.tar.gz dist/* package*
+            cd ..
             cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+
+            mkdir -p ~/.ssh
+            ssh-keyscan `sed -n '2p' .circleci/ansible/inventory.txt` >> ~/.ssh/known_hosts            
             ansible-playbook -i inventory.txt deploy-backend.yml
 
 #   smoke-test:
