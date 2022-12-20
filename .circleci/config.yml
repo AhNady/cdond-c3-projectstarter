@@ -312,7 +312,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             mkdir -p ~/.ssh
-            ssh-keyscan `sed -n '2p' .circleci/ansible/inventory.txt` >> ~/.ssh/known_hosts
+            ssh-keyscan `sed -n '2p' inventory.txt` >> ~/.ssh/known_hosts
             ansible-playbook -i inventory.txt deploy-backend.yml
 
 #   smoke-test:
