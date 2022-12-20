@@ -1,22 +1,20 @@
-- name: "install dependencies."
-  become: yes
-  apt:
-    name: ["nodejs", "npm"]
-    state: latest
-    update_cache: yes
+- name: "Creates backend app directory"
+  file:
+    path: ~/backend-app
+    state: directory
 
-- name: "install pm2"
-  become: yes
-  npm:
-    name: pm2
-    global: yes
-    production: yes
-    state: present
+- name: "Unarchive backend files"
+  unarchive:
+    src: artifact.tar.gz
+    dest: ~/backend-app    
 
-- name: stop pm2
-  become: true
-  command: pm2 stop default
+- name: "Installing Node Dependencies"
+  shell: |
+    cd ~/backend-app
+    npm install
 
-- name: start pm2
-  become: true
-  command: pm2 start npm -- start
+- name: "Executing Node app with PM2"
+  shell: |
+    cd ~/backend-app/dist
+    pm2 stop default
+    pm2 start main.js

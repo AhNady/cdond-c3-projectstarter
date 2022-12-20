@@ -313,6 +313,7 @@ jobs:
             cat inventory.txt
             mkdir -p ~/.ssh
             ssh-keyscan `sed -n '2p' inventory.txt` >> ~/.ssh/known_hosts
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
             ansible-playbook -i inventory.txt deploy-backend.yml
 
 #   smoke-test:
