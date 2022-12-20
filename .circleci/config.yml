@@ -252,8 +252,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -262,6 +260,8 @@ jobs:
             yum install -y nodejs
             npm install pm2
             yum install -y tar gzip
+      - attach_workspace:
+          at: ~/            
       - run:
           name: Get backend url
           command: |
