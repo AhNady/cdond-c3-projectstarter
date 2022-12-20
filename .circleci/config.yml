@@ -257,9 +257,7 @@ jobs:
           command: |
             yum update -y
             yum install -y python3
-            yum install -y gcc-c++ make
-            curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
-            yum install -y nodejs
+            yum install nodejs npm --enablerepo=epel
             npm install pm2
             yum install -y tar gzip
       - attach_workspace:
