@@ -309,7 +309,7 @@ jobs:
             tar -czf artifact.tar.gz dist/* package*
             cd ..
             cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
-
+            ls -a .circleci/ansible/roles/deploy/files
             mkdir -p ~/.ssh
             ssh-keyscan `sed -n '2p' .circleci/ansible/inventory.txt` >> ~/.ssh/known_hosts            
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
