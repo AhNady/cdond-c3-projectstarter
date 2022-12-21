@@ -312,7 +312,7 @@ jobs:
 
             mkdir -p ~/.ssh
             ssh-keyscan `sed -n '2p' .circleci/ansible/inventory.txt` >> ~/.ssh/known_hosts            
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
 
 #   smoke-test:
 #     docker:
