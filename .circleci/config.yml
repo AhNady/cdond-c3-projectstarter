@@ -286,6 +286,8 @@ jobs:
       - checkout
       - add_ssh_keys:            
           fingerprints: ["fb:6e:2c:9f:11:4d:04:18:54:56:32:79:73:df:fc:ad"]
+      - restore_cache:
+          keys: [backend-build]
       - attach_workspace:
           at: .circleci/ansible
       - run:
