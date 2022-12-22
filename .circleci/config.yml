@@ -260,7 +260,7 @@ jobs:
             yum -y install nodejs --skip-broken
             npm install pm2
             yum install -y tar gzip
-            npm install -g webpack-cli@3.3.5 -D --save
+            npm install -g webpack-cli -D --save
       - attach_workspace:
           at: ~/            
       - run:
