@@ -30,39 +30,37 @@ commands:
             sudo apt install -y nodejs
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-    # parameters:
-    #   # Add parameter here   
+    parameters:
+      Workflow_ID:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
-          name: Destroy backend environment
+          name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack \
-              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-      - run:
-          name: Destroy backend environment
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack \
-              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"            
-              
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.Workflow_ID >>
+            aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.Workflow_ID >>
+
   revert-migrations:
-    description: Revert the last migration if successfully run in the current workflow.
+    description: Revert the last migration
     parameters:
-      # Add parameter here     
+      Workflow_ID:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Revert migrations
-          # Add when this will run
+          when: on_fail
           command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
-            if(( $SUCCESS==1 )); 
+            SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUCKET}/migration_<< parameters.Workflow_ID >>)
+            # Logic for reverting the database state
+            if (( $SUCCESS == 1 ));
             then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
             fi
 jobs:
   build-frontend:
@@ -188,6 +186,8 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
 
+      - destroy-environment
+
   configure-infrastructure:
     docker:
       - image: cimg/base:stable
@@ -207,6 +207,9 @@ jobs:
             mkdir -p ~/.ssh
             ssh-keyscan `sed -n '2p' inventory.txt` >> ~/.ssh/known_hosts
             ansible-playbook -i inventory.txt configure-server.yml
+      
+      - destroy-environment            
+
   run-migrations:
     docker:
       - image: cimg/node:13.8.0
@@ -226,6 +229,9 @@ jobs:
             then
               curl https://kvdb.io/${KVDB_BUCKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
+      
+      - destroy-environment
+      - revert-migrations
 
   deploy-frontend:
     docker:
@@ -256,6 +262,10 @@ jobs:
             cd frontend
             npm run build
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+
+      - destroy-environment
+      - revert-migrations
+
   deploy-backend:
     docker:
       - image: cimg/base:stable
@@ -295,6 +305,9 @@ jobs:
             ssh-keyscan `sed -n '2p' inventory.txt` >> ~/.ssh/known_hosts
             ansible-playbook -i inventory.txt deploy-backend.yml
 
+      - destroy-environment
+      - revert-migrations
+
   smoke-test:
     docker:
       - image: cimg/base:stable
@@ -326,6 +339,10 @@ jobs:
             else
               exit 1
             fi
+
+      - destroy-environment
+      - revert-migrations
+                  
 #   cloudfront-update:
 #     docker:
 #       # Docker image here that supports AWS CLI
