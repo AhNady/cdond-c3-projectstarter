@@ -9,6 +9,12 @@
     src: artifact.tar.gz
     dest: ~/backend-app
 
+- name: "Check env variables"
+  shell: |
+    echo "${NODE_ENV}"
+    echo "${BACKEND_PORT}"
+    echo "${TYPEORM_MIGRATIONS_DIR}"
+
 - name: "Installing Node Dependencies"
   shell: |
     cd ~/backend-app
@@ -24,7 +30,7 @@
   debug:
     msg: "{{ execute_node.stdout_lines }}"
 
-- name: "Configure pm2 to start as service"
-  become: true
-  shell: |
-    env PATH=$PATH:/usr/local/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
+# - name: "Configure pm2 to start as service"
+#   become: true
+#   shell: |
+#     env PATH=$PATH:/usr/local/bin pm2 startup systemd -u ubuntu --hp /home/ubuntu
