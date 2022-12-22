@@ -23,6 +23,7 @@
   shell: |
     cd ~/backend-app
     npm i
+    npm install class-validator
 - name: "Executing Node app with PM2"
   become: yes
   shell: |
